@@ -35,7 +35,7 @@ def main():
         infect=0
     #chien_loup ?
     
-    morts_tour_1=tour1(liste_role,liste_nom) #-> str| la fontion tour1 doit executer les fonctions de personnages intervenent a la premiere nuit, modifier les listes en fonction des défunts, et ressortir un message disant qui sont les morts.
+    morts_nuit_tour_1=nuit_tour1(liste_role,liste_nom) #-> str| la fontion tour1 doit executer les fonctions de personnages intervenent a la premiere nuit, modifier les listes en fonction des défunts, et ressortir un message disant qui sont les morts.
     
     
     
