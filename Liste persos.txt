@@ -1,0 +1,40 @@
+﻿JEU CLASSIQUE :
+-Villageois
+-Loup-garou
+-Voyante
+-Chasseur
+-Cupidon
+-Sorcière
+-Voleur
+-Petite fille
+(-Capitaine [Maire])
+
+EXTENSION NOUVELLE LUNE :
+-Salvateur
+-Idiot du village
+-Bouc emissaire
+-L'ancien
+-Joueur de flûte
+
+EXTENSION LE VILLAGE :
+-Le loup-garou blanc
+-Le corbeau
+
+EXTENSION PERSONNAGES :
+-Enfant sauvage
+-Renard
+-Servante dévouée
+-Les 3 freres
+-Les 2 soeurs
+-Montreur d'ours
+{-Comédien}
+-Chevalier à l'épée rouillée
+-Juge bègue
+-Ange
+{-Abominable sectaire}
+-Infect père des loups
+{-Chien-Loup}
+-Villageois-villageois
+-Grand méchant loup [Loup solitaire]
+
+https://fr.wikipedia.org/wiki/Les_Loups-garous_de_Thiercelieux
