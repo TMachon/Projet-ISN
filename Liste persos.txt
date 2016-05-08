@@ -1,12 +1,12 @@
 ﻿JEU CLASSIQUE :
-- 1_Voleur
-- 2_Cupidon
-- 3_Voyante
-- 4_Loup-garou
-- 5_Sorciere
-- 6_Petite fille
-- 7_Villageois
-- 8_Chasseur
+-Villageois
+-Loup-garou
+-Voyante
+-Chasseur
+-Cupidon
+-Sorcière
+-Voleur
+-Petite fille
 (-Capitaine [Maire])
 
 EXTENSION NOUVELLE LUNE :
