@@ -3,10 +3,10 @@ from tkinter import ttk
 
 ##### -> Fonctions de paramétrage
  
-def parametrage_global () :
+def parametrage_global () : # cette fonction associe un nom a un rôle.
     
-    liste_role = []
-    liste_nom = []
+    liste_role = [] # liste contenant les codes des roles choisis
+    liste_nom = [] # liste contenant une partie du code des roles et les noms des joueurs associés
     liste_temporaire = parametrage_role()
     
     for i in range(len(liste_temporaire)) :
@@ -18,9 +18,9 @@ def parametrage_global () :
     
     return [liste_role, liste_nom]
  
-def parametrage_role () :
+def parametrage_role () : # cette fonction crée une liste des roles
     
-    def fermer_fenetre_1 () :
+    def fermer_fenetre_1 () : # cette fonction ferme la fenêtre
 
         fenetre_1.destroy()
     
@@ -126,9 +126,9 @@ def parametrage_role () :
 
     return ["1_{}_voleur".format(nombre_voleur.get()), "2_{}_cupidon".format(nombre_cupidon.get()), "3_{}_voyante".format(nombre_voyante.get()), "4_{}_loup_garou".format(nombre_loup_garou.get()), "5_{}_sorciere".format(nombre_sorciere.get()), "6_{}_petite_fille".format(nombre_petite_fille.get()), "7_{}_villageois".format(nombre_villageois.get()), "8_{}_chasseur".format(nombre_chasseur.get())]
 
-def parametrage_nom (informations) :
+def parametrage_nom (informations) : # cette fonction crée la liste de noms associés aux roles
     
-    def fermer_fenetre_2 () :
+    def fermer_fenetre_2 () : # cette fonction ferme la fenetre
 
         fenetre_2.destroy()
     
@@ -178,49 +178,50 @@ def parametrage_nom (informations) :
 
 ##### -> Fonctions des nuits
 
-def tours (liste_role_nom) :
+def tours (liste_role_nom) : # cette fonction fait les boucles du jeu
     
-    fin = 0
-    tour_cupidon = 0
-    amoureux = ["0", "0"]
-    potions_sorciere = [0, 0]
-    deces_amoureux = 0
-    deces_chasseur = 0
+    fin = 0 # utilisée pour tester si le jeu est fini
+    tour_cupidon = 0 # utilisé pour ne pas que cupidon joue a tout les tours
+    amoureux = ["0", "0"] # valeur de base des amoureux
+    potions_sorciere = [0, 0] # utilisé pour compter les potions de la sorciere
+    deces_amoureux = 0 # utilisé pour tester si le 2eme amoureux meurt
+    deces_chasseur = 0 # utilisé pour tester si le chasseur est mort
     
     #NUIT
     
-    while fin != 1 :
+    while fin != 1 : # test de fin de jeu
         
-        morts = []
+        morts = [] # remise a zero de la liste
         
+        #test combien il y a de loups
         nombre_loup_garous = 0
         for i in range(len(liste_role_nom[0])) :
             if liste_role_nom[0][i][0] == '4' :
                 nombre_loup_garous += 1
             
-        if nombre_loup_garous == len(liste_role_nom[0]):
+        if nombre_loup_garous == len(liste_role_nom[0]): #test de fin "victoire loups"
             fin_loup_garous()
             break
-        elif nombre_loup_garous == 0 :
+        elif nombre_loup_garous == 0 : #☺ test de fin " victoire village"
             fin_villageois()
             break
-        else :
-            if '1_0_voleur' in liste_role_nom[0] :
+        else : # tour de nuit
+            if '1_0_voleur' in liste_role_nom[0] : # test si il y a un voleur et execute la fonction
                 liste_role_nom = voleur(liste_role_nom)
                 
-            if ('2_0_cupidon' in liste_role_nom[0]) and (tour_cupidon == 0) :
+            if ('2_0_cupidon' in liste_role_nom[0]) and (tour_cupidon == 0) : # test si il y a cupidon et execute la fonction
                 while amoureux[1] == amoureux [0] :
                     amoureux = cupidon(liste_role_nom)
                 tour_cupidon += 1
               
-            if '3_0_voyante' in liste_role_nom[0] :
+            if '3_0_voyante' in liste_role_nom[0] : # test si il y a la voyante et execute la fonction
                 voyante()
     
-            mort_loup_garou = loup_garou(liste_role_nom)
+            mort_loup_garou = loup_garou(liste_role_nom) # execute le programme loup_garou et rapporte les modifications effectuée au scenario
             morts.append(mort_loup_garou)
         
-            if '5_0_sorciere' in liste_role_nom[0] :
-                if (potions_sorciere[0] == 0) or (potions_sorciere[1] == 0) :
+            if '5_0_sorciere' in liste_role_nom[0] : # test si il y a la soricere et execute la fonction
+                if (potions_sorciere[0] == 0) or (potions_sorciere[1] == 0) : # test si la sorciere a une potion disponible
                     changements = sorciere(liste_role_nom, morts, potions_sorciere)
                     if changements[0] == 1 :
                         morts.remove(morts[0])
@@ -229,12 +230,12 @@ def tours (liste_role_nom) :
                     potions_sorciere = changements[2]
                     
     #JOUR
-            
+            #### cette partie ne fonctionne pas, aucune solution n'a été trouvée
             for i in range(2) :
                 if deces_amoureux == 0 :
                     if amoureux != ["0", "0"] :
                         mort_amoureux = test_amoureux(amoureux, morts)
-                        if mort_amoureux != 0 :
+                        if mort_amoureux != [0] :
                             morts.append(mort_amoureux)
                             deces_amoureux += 1
                 if deces_chasseur == 0 :
@@ -243,11 +244,13 @@ def tours (liste_role_nom) :
                             mort_chasseur = chasseur(liste_role_nom)
                             morts.append(mort_chasseur)
                             deces_chasseur +=1
+            ####
             
-            liste_role_nom = triage_morts(liste_role_nom, morts)
-            annonce_morts(morts)
-            morts = []
+            liste_role_nom = triage_morts(liste_role_nom, morts) # modifie la liste des roles en retirant les morts
+            annonce_morts(morts) # fonction qui affiche une console contenant le nom des morts
+            morts = [] # nouvelle liste vierge
             
+            #### test de debut de fin de nuit pour savoir si il y a un vainqueur
             nombre_loup_garous = 0
             for i in range(len(liste_role_nom[0])) :
                 if liste_role_nom[0][i][0] == '4' :
@@ -259,15 +262,17 @@ def tours (liste_role_nom) :
             elif nombre_loup_garous == 0 :
                 fin_villageois()
                 break
+            ####
             else :
-                mort_villageois = village(liste_role_nom)
-                morts.append(mort_villageois)
+                mort_villageois = village(liste_role_nom) # execute le vote du village
+                morts.append(mort_villageois) # ajoute la personne désignée a la liste de mort en attendant les tests
                 
+                #### cette partie ne fonctionne pas, aucune solution n'a été trouvée
                 for i in range(2) :
                     if deces_amoureux == 0 :
                         if amoureux != ["0", "0"] :
                             mort_amoureux = test_amoureux(amoureux, morts)
-                            if mort_amoureux != 0 :
+                            if mort_amoureux != [0] :
                                 morts.append(mort_amoureux)
                                 deces_amoureux += 1
                     if deces_chasseur == 0 :
@@ -276,24 +281,10 @@ def tours (liste_role_nom) :
                                 mort_chasseur = chasseur(liste_role_nom)
                                 morts.append(mort_chasseur)
                                 deces_chasseur +=1
-                            
-                liste_role_nom = triage_morts(liste_role_nom, morts)
-                morts = []
-            
-            nombre_loup_garous = 0
-            for i in range(len(liste_role_nom[0])) :
-                if liste_role_nom[0][i][0] == '4' :
-                    nombre_loup_garous += 1            
-            
-            if nombre_loup_garous == len(liste_role_nom[0]):
-                fin_loup_garous()
-                break
-            elif nombre_loup_garous == 0 :
-                fin_villageois()    
-                break
- 
-def triage_morts (liste_role_nom, morts) :
-    
+                ####
+                liste_role_nom = triage_morts(liste_role_nom, morts) # modifie la liste des roles en retirant les morts
+
+def triage_morts (liste_role_nom, morts) : # fonction qui enleve les morts de la liste de personnage
     indices_morts = []
     for i in range(len(liste_role_nom[0])) :
         for y in range(len(morts)) :
@@ -305,7 +296,7 @@ def triage_morts (liste_role_nom, morts) :
         
     return liste_role_nom
 
-def test_amoureux (amoureux, morts) :
+def test_amoureux (amoureux, morts) : # fonction qui test si un amoureux est mort et retourne l'autre ( le bug plus haut vient peut-être de là )
     
     nombre_amoureux_morts = 0
     for i in range(len(amoureux)) :
@@ -315,13 +306,13 @@ def test_amoureux (amoureux, morts) :
                 mort_amoureux = amoureux[i-1]
     
     if nombre_amoureux_morts != 1:
-        mort_amoureux = 0
+        mort_amoureux = [0]
     
     return mort_amoureux
     
-def annonce_morts (morts) :
+def annonce_morts (morts) : # fonction qui crée une fenetre qui annonce qui est mort
     
-    def fermer_fenetre_annonce () :
+    def fermer_fenetre_annonce () : # fonction qui ferme la fenetre
 
         fenetre_annonce.destroy()
     
@@ -347,7 +338,7 @@ def annonce_morts (morts) :
 
     fenetre_annonce.mainloop()
 
-def fin_loup_garous () :
+def fin_loup_garous () : # fonction qui annonce la fin si les loups-garous gagnent
     
     fenetre_loup_garou = tk.Tk()
     fenetre_loup_garou.title("Victoire des loup-garous !")
@@ -365,7 +356,7 @@ def fin_loup_garous () :
 
     fenetre_loup_garou.mainloop()
 
-def fin_villageois () :
+def fin_villageois () : # fonction qui annonce la fin si les villageois gagnent
     
     fenetre_villageois = tk.Tk()
     fenetre_villageois.title("Victoire des villageois !")
@@ -385,9 +376,9 @@ def fin_villageois () :
 
 ##### -> Fonctions des rôles
     
-def voleur (liste_role_nom) :
+def voleur (liste_role_nom) : # fonction qui execute le role du voleur
     
-    def fermer_fenetre_voleur () :
+    def fermer_fenetre_voleur () : # fonction qui ferme la fenetre
 
         fenetre_voleur.destroy()    
                 
@@ -433,9 +424,9 @@ def voleur (liste_role_nom) :
     
     return liste_role_nom
 
-def cupidon (liste_role_nom) :
+def cupidon (liste_role_nom) : # fonction qui execute le role de cupidon
 
-    def fermer_fenetre_cupidon () :
+    def fermer_fenetre_cupidon () : # fonction qui ferme la fenetre
 
         fenetre_cupidon.destroy()
 
@@ -484,9 +475,9 @@ def cupidon (liste_role_nom) :
     
     return [amoureux_1, amoureux_2]
 
-def voyante () :
+def voyante () : # fonction qui execute le role de la voyante
 
-    def fermer_fenetre_voyante () :
+    def fermer_fenetre_voyante () : # fonction qui ferme la fenetre
 
         fenetre_voyante.destroy()
 
@@ -502,9 +493,9 @@ def voyante () :
     validation = ttk.Button(fenetre_voyante, text="Valider", command = fermer_fenetre_voyante)
     validation.grid(row=1, column=2)
     
-def loup_garou (liste_role_nom) :
+def loup_garou (liste_role_nom) : # fonction qui execute le role des loups-garou
     
-    def fermer_fenetre_loup_garou () :
+    def fermer_fenetre_loup_garou () : # fonction qui ferme la fenetre
         
         fenetre_loup_garou.destroy()
      
@@ -543,9 +534,9 @@ def loup_garou (liste_role_nom) :
             
     return mort_loup_garou
 
-def sorciere (liste_role_nom, morts, potions_sorciere) :
+def sorciere (liste_role_nom, morts, potions_sorciere) : # fonction qui execute le role de la sorciere
     
-    def fermer_fenetre_sorciere () :
+    def fermer_fenetre_sorciere () : # fonction qui ferme la fenetre
         
         fenetre_sorciere.destroy()    
     
@@ -604,9 +595,9 @@ def sorciere (liste_role_nom, morts, potions_sorciere) :
             
     return [check_val, mort_sorciere, potions_sorciere]
     
-def chasseur (liste_role_nom) :
+def chasseur (liste_role_nom) : # fonction qui execute le role du chasseur
     
-    def fermer_fenetre_chasseur () :
+    def fermer_fenetre_chasseur () : # fonction qui ferme la fenetre
         
         fenetre_chasseur.destroy()
      
@@ -644,9 +635,8 @@ def chasseur (liste_role_nom) :
             
     return mort_chasseur
 
-def village (liste_role_nom) :
-    
-    def fermer_fenetre_village () :
+def village (liste_role_nom) :# fonction qui execute le vote du village
+    def fermer_fenetre_village () : # fonction qui ferme la fenetre
         
         fenetre_village.destroy()
      
@@ -690,7 +680,7 @@ def fin () :
     
     quit()
    
-def main () :
+def main () : # fonction qui appelle les fonctions du programme
     
     liste_role_nom = parametrage_global()
     tours(liste_role_nom)
