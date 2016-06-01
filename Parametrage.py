@@ -201,9 +201,11 @@ def tours (liste_role_nom) : # cette fonction fait les boucles du jeu
             
         if nombre_loup_garous == len(liste_role_nom[0]): # test de fin "victoire loups"
             fin_loup_garous()
+            fin = 1
             break
         elif nombre_loup_garous == 0 : # test de fin " victoire village"
             fin_villageois()
+            fin = 1
             break
         else : # tour de nuit
             if '1_0_voleur' in liste_role_nom[0] : # test si il y a un voleur et execute la fonction
@@ -258,9 +260,11 @@ def tours (liste_role_nom) : # cette fonction fait les boucles du jeu
             
             if nombre_loup_garous == len(liste_role_nom[0]):
                 fin_loup_garous()
+                fin = 1
                 break
             elif nombre_loup_garous == 0 :
                 fin_villageois()
+                fin = 1
                 break
             ####
             else :
@@ -359,6 +363,10 @@ def annonce_morts (morts) : # fonction qui crée une fenetre qui annonce qui est
 
 def fin_loup_garous () : # fonction qui annonce la fin si les loups-garous gagnent
     
+    def fermer_fenetre_loup_garou () : # fonction qui ferme la fenetre
+
+        fenetre_loup_garou.destroy()
+    
     fenetre_loup_garou = tk.Tk()
     fenetre_loup_garou.title("Victoire des loup-garous !")
     
@@ -368,7 +376,7 @@ def fin_loup_garous () : # fonction qui annonce la fin si les loups-garous gagne
     
     #Ligne 2
     
-    validation = ttk.Button(fenetre_loup_garou, text="Valider", command = fin)
+    validation = ttk.Button(fenetre_loup_garou, text="Valider", command = fermer_fenetre_loup_garou)
     validation.grid(row=1, column=0)
     
     #Loop
@@ -376,6 +384,10 @@ def fin_loup_garous () : # fonction qui annonce la fin si les loups-garous gagne
     fenetre_loup_garou.mainloop()
 
 def fin_villageois () : # fonction qui annonce la fin si les villageois gagnent
+    
+    def fermer_fenetre_villageois () : # fonction qui ferme la fenetre
+
+        fenetre_villageois.destroy()
     
     fenetre_villageois = tk.Tk()
     fenetre_villageois.title("Victoire des villageois !")
@@ -386,7 +398,7 @@ def fin_villageois () : # fonction qui annonce la fin si les villageois gagnent
     
     #Ligne 2
     
-    validation = ttk.Button(fenetre_villageois, text="Valider", command = fin)
+    validation = ttk.Button(fenetre_villageois, text="Valider", command = fermer_fenetre_villageois)
     validation.grid(row=1, column=0)
     
     #Loop
@@ -703,10 +715,6 @@ def village (liste_role_nom) : # fonction qui execute le vote du village
     return mort_village
     
 ##### -> MAIN
-   
-def fin () :
-    
-    quit()
    
 def main () : # fonction qui appelle les fonctions du programme
     
