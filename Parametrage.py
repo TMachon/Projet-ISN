@@ -199,10 +199,10 @@ def tours (liste_role_nom) : # cette fonction fait les boucles du jeu
             if liste_role_nom[0][i][0] == '4' :
                 nombre_loup_garous += 1
             
-        if nombre_loup_garous == len(liste_role_nom[0]): #test de fin "victoire loups"
+        if nombre_loup_garous == len(liste_role_nom[0]): # test de fin "victoire loups"
             fin_loup_garous()
             break
-        elif nombre_loup_garous == 0 : #☺ test de fin " victoire village"
+        elif nombre_loup_garous == 0 : # test de fin " victoire village"
             fin_villageois()
             break
         else : # tour de nuit
@@ -226,11 +226,11 @@ def tours (liste_role_nom) : # cette fonction fait les boucles du jeu
                     if changements[0] == 1 :
                         morts.remove(morts[0])
                     if changements[1] != 'Personne' :
-                        morts.append(changements[0])
+                        morts.append(changements[1])
                     potions_sorciere = changements[2]
                     
     #JOUR
-            #### cette partie ne fonctionne pas, aucune solution n'a été trouvée
+            ## cette partie ne fonctionne pas, aucune solution n'a été trouvée ##
             for i in range(2) :
                 if deces_amoureux == 0 :
                     if amoureux != ["0", "0"] :
@@ -308,6 +308,24 @@ def test_amoureux (amoureux, morts) : # fonction qui test si un amoureux est mor
     if nombre_amoureux_morts != 1:
         mort_amoureux = [0]
     
+    if nombre_amoureux_morts == 1 :
+        
+        def fermer_fenetre_amoureux () : # fonction qui ferme la fenetre
+
+            fenetre_amoureux.destroy()
+
+        fenetre_amoureux = tk.Tk()
+        fenetre_amoureux.title("Loup-Garou : Amoureux")
+        
+        #Ligne 1
+        
+        ttk.Label(fenetre_amoureux, text="Les amoureux sont morts !").grid(row=0, column=0) 
+        
+        #Ligne 2
+        
+        validation = ttk.Button(fenetre_amoureux, text="Valider", command = fermer_fenetre_amoureux)
+        validation.grid(row=1, column=2)
+    
     return mort_amoureux
     
 def annonce_morts (morts) : # fonction qui crée une fenetre qui annonce qui est mort
@@ -316,12 +334,13 @@ def annonce_morts (morts) : # fonction qui crée une fenetre qui annonce qui est
 
         fenetre_annonce.destroy()
     
-    if len(morts) > 0 :
-        annonce = 'Sont morts cette nuit : {}'.format(morts[0][4:])
-    if len(morts) > 1 :
-        for i in range(len(morts)-1) :
-            annonce += " {}" .format(morts[i+1][4:])
-    
+    if len(morts) == 0:
+        annonce = "Personne n'est mort cette nuit"
+    elif len(morts) == 1 :
+        annonce = 'Est mort cette nuit : {}'.format(morts[0][4:])
+    elif len(morts) == 2 :
+        annonce = 'Sont morts cette nuit : {} et {}'.format(morts[0][4:], morts[1][4:])
+
     fenetre_annonce = tk.Tk()
     fenetre_annonce.title("Les morts de la nuit")
         
@@ -414,7 +433,7 @@ def voleur (liste_role_nom) : # fonction qui execute le role du voleur
         if nouvelle_carte_voleur == affichage[i] :
             nouveau_role = cartes_dispo[i]
         
-    liste_role_nom[0].remove(liste_role_nom[0][0])
+    liste_role_nom[0].remove(liste_role_nom[0][0]) # ce bloc réorganise correctement l'ordre des cartes avec le nouveau rôle du voleur
     liste_role_nom[0].append(nouveau_role)
     nouveau_nom = nouveau_role[0:4] + liste_role_nom[1][0][4:]
     liste_role_nom[1].remove(liste_role_nom[1][0])
@@ -542,11 +561,18 @@ def sorciere (liste_role_nom, morts, potions_sorciere) : # fonction qui execute 
     
     affichage = []
     for i in range(len(liste_role_nom[1])) :
-        affichage.append(liste_role_nom[1][i][4].upper() + liste_role_nom[1][i][5:] + " (" + liste_role_nom[0][i][4].upper() + liste_role_nom[0][i][5:] + ")".replace('_',' '))
+        affichage.append((liste_role_nom[1][i][4].upper() + liste_role_nom[1][i][5:] + " (" + liste_role_nom[0][i][4].upper() + liste_role_nom[0][i][5:] + ")").replace('_',' '))
     affichage.append('Personne')
     
     for i in range(2) :    
         liste_role_nom[i].append('Personne')
+    
+    etat_combo = 'readonly' # ce bloc grise les fonctions de la sorciere si elle n'a pas la potion correspondante
+    etat_check = 'enable'
+    if potions_sorciere[0] == 1 :
+        etat_combo = 'disable'
+    if potions_sorciere[1] == 1 :
+        etat_check = 'disable'
     
     texte = "La sorcière sauve-t-elle la victime des loup-garous : {} ?".format(morts[0][4:])
     
@@ -560,7 +586,7 @@ def sorciere (liste_role_nom, morts, potions_sorciere) : # fonction qui execute 
     #Ligne 2
     
     reponse = tk.StringVar()
-    combo = ttk.Combobox(fenetre_sorciere, width=20, textvariable=reponse, state='readonly')
+    combo = ttk.Combobox(fenetre_sorciere, width=20, textvariable=reponse, state=etat_combo)
     combo['values'] = tuple(affichage)
     combo.current(0)
     combo.grid(row=1, column=0)
@@ -572,7 +598,7 @@ def sorciere (liste_role_nom, morts, potions_sorciere) : # fonction qui execute 
     #Ligne 4
 
     check_val = tk.IntVar()
-    check = ttk.Checkbutton(fenetre_sorciere, variable=check_val, text=texte)
+    check = ttk.Checkbutton(fenetre_sorciere, variable=check_val, text=texte, state=etat_check)
     check.grid(row=3, column=0, sticky="w")
 
     validation = ttk.Button(fenetre_sorciere, text="Valider", command = fermer_fenetre_sorciere)
@@ -584,16 +610,18 @@ def sorciere (liste_role_nom, morts, potions_sorciere) : # fonction qui execute 
     
     mort_sorciere = reponse.get()
     
+    survie = check_val.get()
+    
     if mort_sorciere != 'Personne' :
         potions_sorciere[0] += 1
         for i in range(len(affichage)) :
             if mort_sorciere == affichage[i] :
                 mort_sorciere = liste_role_nom[1][i]
                 
-    if check_val == 1 :
+    if survie == 1 :
         potions_sorciere[1] += 1
             
-    return [check_val, mort_sorciere, potions_sorciere]
+    return [survie, mort_sorciere, potions_sorciere]
     
 def chasseur (liste_role_nom) : # fonction qui execute le role du chasseur
     
@@ -606,7 +634,7 @@ def chasseur (liste_role_nom) : # fonction qui execute le role du chasseur
         affichage.append(liste_role_nom[1][i][4].upper() + liste_role_nom[1][i][5:] + " (" + liste_role_nom[0][i][4].upper() + liste_role_nom[0][i][5:] + ")".replace('_',' '))
 
     fenetre_chasseur = tk.Tk()
-    fenetre_chasseur.title("Loup-Garou : Loup-garous")
+    fenetre_chasseur.title("Loup-Garou : Chasseur")
     
     #Ligne 1
     
@@ -635,7 +663,7 @@ def chasseur (liste_role_nom) : # fonction qui execute le role du chasseur
             
     return mort_chasseur
 
-def village (liste_role_nom) :# fonction qui execute le vote du village
+def village (liste_role_nom) : # fonction qui execute le vote du village
     def fermer_fenetre_village () : # fonction qui ferme la fenetre
         
         fenetre_village.destroy()
@@ -645,7 +673,7 @@ def village (liste_role_nom) :# fonction qui execute le vote du village
         affichage.append(liste_role_nom[1][i][4].upper() + liste_role_nom[1][i][5:] + " (" + liste_role_nom[0][i][4].upper() + liste_role_nom[0][i][5:] + ")".replace('_',' '))
  
     fenetre_village = tk.Tk()
-    fenetre_village.title("Loup-Garou : Loup-garous")
+    fenetre_village.title("Loup-Garou : Village")
     
     #Ligne 1
     
